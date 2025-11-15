@@ -1,0 +1,5 @@
+
+
+SOMELABEL: .string "hello :)"
+mov #0 , r0
+mov #0, r0
