@@ -1,124 +1,100 @@
-🛠️ Assembler Compiler – Two-Pass Assembler (C, Linux)
+🧩 Assembler Compiler — Two-Pass Assembler (C, Linux)
 
-This project implements a two-pass assembler in C, capable of parsing assembly source files, handling macros, resolving symbols, encoding instructions, and generating the required output files:
+A full two-pass assembler implemented in C as part of the Systems Programming Laboratory (20465) course at the Open University of Israel.
+The project includes macro expansion, symbol resolution, instruction encoding, and machine-code generation—designed to closely simulate the behavior of real assembler tools.
 
-.ob – machine code
+📘 Overview
 
-.ent – entry symbols
+This assembler processes a custom assembly language and produces the required output files through two main phases:
 
-.ext – external symbols
+1️⃣ First Pass
 
-The assembler is organized into two main phases:
+Parse each line and validate syntax
 
-First Pass – parse code, collect symbols, macros, and data.
+Identify labels and assign addresses
 
-Second Pass – resolve symbol usage, validate references, and generate output files.
+Process .data and .string directives
 
-📌 General Rules
+Build symbol and attribute tables
 
-Whitespace includes spaces " " and tabs \t.
+Collect information needed for encoding
 
-Lines are separated by \n.
+2️⃣ Second Pass
 
-Input consists of .as files containing instructions, labels, macros, and data definitions.
+Resolve symbol references
 
-📚 Data Structures Used
-Hash Table
+Encode instructions into machine code
 
-A custom hash table is implemented to store:
+Generate the following output files:
 
-Program labels
+.ob — machine code
 
-Macro names and their contents
+.ent — entry symbols
 
-Built-in constants and metadata
+.ext — external references
 
-It supports storing both integer and string values to handle different memory allocation needs.
+The assembler uses custom implementations of:
 
-Linked List
+Hash Table — symbol table, macros, attributes
 
-A linked-list structure is used to preserve the order of:
+Linked List — ordered instruction & data storage
 
-Instructions
+Utility Modules — string handling, error tracking, and parsing helpers
 
-Data declarations (.data, .string)
+📂 Project Structure
+assembler.c        – Main driver of the assembler
+first_run.c        – First pass: parsing & symbol table creation
+second_run.c       – Second pass: encoding & output generation
+macro.c            – Macro expansion logic
+parser.c           – Line parsing, tokenizing, validation
+hash_table.c       – Custom hash table implementation
+linked_list.c      – Linked list for instructions/data
+symbols.c          – Symbol and attribute handlers
+errors.c           – Error logging utilities
+utils.c            – General helper functions
+makefile           – Build script
 
-Each node includes a free function pointer to correctly release memory.
+Headers/           – Header files (.h)
+Tests_and_results/ – Input & output samples
 
-⚙️ Utility Modules
-error_util
+⚙️ Build & Run Instructions
+Requirements
 
-Wrapper functions for operations that may fail
+GCC compiler
 
-Consistent error/warning printing
+Linux or compatible environment
 
-str_util
+Build
+make
 
-String manipulation helpers used across the assembler
-
-symbols
-
-Symbol table management
-
-Handles built-in constants, label attributes, entries, and externals
-
-🧩 Macro System
-
-Macros are parsed before assembly begins.
-
-Rules:
-
-Macros follow this structure:
-
-mcr <macro_name>
-<macro content>
-endmcr
+Run
+./assembler file1.as file2.as ...
 
 
-Macro names cannot match built-in constants.
+For each source file, the assembler outputs:
 
-Invalid macro definitions are ignored.
+file.ob
 
-Macro tokens must match exactly (e.g., m1 is valid, but m1: is not).
+file.ent (if entry symbols exist)
 
-🔄 First Pass (Analysis)
+file.ext (if externs exist)
 
-The assembler performs:
+🧪 Testing
 
-Macro expansion
+The Tests_and_results directory includes ready-to-use examples demonstrating:
 
-Instruction parsing
+Various addressing modes
 
-Label collection
+Macro handling
 
-Data encoding
+Syntax errors & validation
 
-Creation of symbol attributes (data/code/entry/external)
+Expected output file formats
 
-All code and data elements are stored in the appropriate linked lists or hash tables.
+📝 Notes
 
-🔄 Second Pass (Encoding)
+Designed with modularity, clarity, and data abstraction in mind
 
-In the second pass the assembler:
+Includes documented functions and commented logic throughout
 
-Validates label usage
-
-Resolves symbol references
-
-Encodes instructions into machine format
-
-Generates:
-
-.ob file (machine code)
-
-.ent file (if entry labels exist)
-
-.ext file (if external labels exist)
-
-If any label is undefined, output files are not generated.
-
-📁 Output Files
-File	Description
-file.ob	Encoded machine code
-file.ent	List of entry labels
-file.ext	List of external references
+Educational project — not intended for production deployment
